@@ -4,6 +4,8 @@ from os import getenv
 from sqlalchemy import engine_from_config, pool
 
 from alembic import context
+from db.db_setup import Base
+from db.models import user   # noqa: F401
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -11,7 +13,7 @@ config = context.config
 
 # my shit
 SQLALCHEMY_DATABASE_URL = f"postgresql+asyncpg://{getenv('POSTGRES_USER')}:{getenv('POSTGRES_PASSWORD')}@{getenv('POSTGRES_HOST')}:{getenv('POSTGRES_PORT')}/{getenv('POSTGRES_DATABASE')}"
-config.set_main_option('sqlalchemy.url', SQLALCHEMY_DATABASE_URL)
+config.set_main_option("sqlalchemy.url", SQLALCHEMY_DATABASE_URL)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
@@ -22,7 +24,7 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-target_metadata = None
+target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
