@@ -13,7 +13,7 @@ Base = declarative_base()
 
 
 # DB Utilities
-async def async_get_db():
+async def get_db():
     async with SessionLocal() as db:
         yield db
         await db.commit()
