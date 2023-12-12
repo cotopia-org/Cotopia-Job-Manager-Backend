@@ -1,19 +1,34 @@
 from os import getenv
 
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy import create_engine
+
+# from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-SQLALCHEMY_DATABASE_URL = f"postgresql+asyncpg://{getenv('POSTGRES_USER')}:{getenv('POSTGRES_PASSWORD')}@{getenv('POSTGRES_HOST')}:{getenv('POSTGRES_PORT')}/{getenv('POSTGRES_DATABASE')}"
+SQLALCHEMY_DATABASE_URL = f"postgresql+psycopg2://{getenv('POSTGRES_USER')}:{getenv('POSTGRES_PASSWORD')}@{getenv('POSTGRES_HOST')}:{getenv('POSTGRES_PORT')}/{getenv('POSTGRES_DATABASE')}"
+# ASYNC_SQLALCHEMY_DATABASE_URL = "postgresql+asyncpg://gwen@localhost/fast_lms"
 
-engine = create_async_engine(SQLALCHEMY_DATABASE_URL)
-SessionLocal = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
+engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={}, future=True)
+# async_engine = create_async_engine(ASYNC_SQLALCHEMY_DATABASE_URL)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine, future=True)
+# AsyncSessionLocal = sessionmaker(
+#     async_engine, class_=AsyncSession, expire_on_commit=False
+# )
 
 Base = declarative_base()
 
 
 # DB Utilities
-async def get_db():
-    async with SessionLocal() as db:
+def get_db():
+    db = SessionLocal()
+    try:
         yield db
-        await db.commit()
+    finally:
+        db.close()
+
+
+# async def async_get_db():
+#     async with AsyncSessionLocal() as db:
+#         yield db
+#         await db.commit()
