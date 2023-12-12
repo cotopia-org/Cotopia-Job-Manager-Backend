@@ -1,39 +1,28 @@
 import enum
 
-from sqlalchemy import Boolean, Column, Enum, ForeignKey, Integer, String, Text
-from sqlalchemy.orm import relationship
+from sqlalchemy import BigInteger, Boolean, Column, Enum, Integer, String
 
 from ..db_setup import Base
 from .mixins import Timestamp
 
 
 class Role(enum.IntEnum):
-    teacher = 1
-    student = 2
+    default = 1
 
 
 class User(Timestamp, Base):
-    __tablename__ = "users"
+    __tablename__ = "user"
 
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String(100), unique=True, index=True, nullable=False)
+    hashed_password = Column(String(511))
     role = Column(Enum(Role))
     is_active = Column(Boolean, default=False)
+    first_name = Column(String(50), nullable=True)
+    last_name = Column(String(50), nullable=True)
+    discord_user_id = Column(BigInteger, nullable=True)
 
-    profile = relationship("Profile", back_populates="owner", uselist=False)
     # student_courses = relationship("StudentCourse", back_populates="student")
     # student_content_blocks = relationship(
     #     "CompletedContentBlock", back_populates="student"
     # )
-
-
-class Profile(Timestamp, Base):
-    __tablename__ = "profiles"
-
-    id = Column(Integer, primary_key=True, index=True)
-    first_name = Column(String(50), nullable=False)
-    last_name = Column(String(50), nullable=False)
-    bio = Column(Text, nullable=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-
-    owner = relationship("User", back_populates="profile")
