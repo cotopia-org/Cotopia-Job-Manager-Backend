@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, Text
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, Text
 from sqlalchemy.orm import relationship
 
 
@@ -13,3 +13,5 @@ class Comment(Timestamp, Base):
     job_id = Column(Integer, ForeignKey("jobs.id"), nullable=False, index=True)
     job = relationship("Job", back_populates="comments")
     body = Column(Text, nullable=False)
+    is_archived = Column(Boolean, default=False)
+
