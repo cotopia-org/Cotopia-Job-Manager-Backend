@@ -1,8 +1,9 @@
+from datetime import datetime
+
 from sqlalchemy.orm import Session
 
 from db.models.comment import Comment as CommentModel
 from schemas.comment import CommentCreate, CommentUpdate
-from datetime import datetime
 
 
 def post_comment(db: Session, comment: CommentCreate):
@@ -14,6 +15,11 @@ def post_comment(db: Session, comment: CommentCreate):
     db.refresh(db_comment)
     return db_comment
 
+
+def get_comment_by_id(db: Session, comment_id: int):
+    return db.query(CommentModel).filter(CommentModel.id == comment_id).first()
+
+
 def edit_comment(db: Session, comment_id: int, comment: CommentUpdate):
     db_comment = db.query(CommentModel).get(comment_id)
     db_comment.updated_at = datetime.now(datetime.timezone.utc)
@@ -21,10 +27,11 @@ def edit_comment(db: Session, comment_id: int, comment: CommentUpdate):
     for var, value in vars(comment).items():
         if value:
             setattr(db_comment, var, value)
-    
+
     db.add(db_comment)
     db.commit()
     return db_comment
+
 
 def delete_comment(db: Session, comment_id: int):
     db_comment = db.query(CommentModel).get(comment_id)
@@ -34,5 +41,3 @@ def delete_comment(db: Session, comment_id: int):
     db.add(db_comment)
     db.commit()
     return db_comment
-
-
