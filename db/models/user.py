@@ -1,4 +1,4 @@
-import enum
+import enum as pyEnum
 
 from sqlalchemy import BigInteger, Boolean, Column, Enum, Integer, String
 
@@ -6,12 +6,12 @@ from ..db_setup import Base
 from .mixins import Timestamp
 
 
-class Role(enum.IntEnum):
+class Role(pyEnum.IntEnum):
     default = 1
 
 
 class User(Timestamp, Base):
-    __tablename__ = "user"
+    __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String(100), unique=True, index=True, nullable=False)
