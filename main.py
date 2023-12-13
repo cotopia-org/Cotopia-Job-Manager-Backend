@@ -1,10 +1,11 @@
 from fastapi import FastAPI
 
-from api import users
+from api import users, comments
 from db.db_setup import engine
-from db.models import user
+from db.models import user, comment
 
 user.Base.metadata.create_all(bind=engine)
+comment.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="Job Manager API",
@@ -17,3 +18,4 @@ app = FastAPI(
 )
 
 app.include_router(users.router)
+app.include_router(comments.router)
