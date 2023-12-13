@@ -29,7 +29,7 @@ class Job(Timestamp, Base):
     acceptor_users = relationship(
         "User", secondary="users_jobs", back_populates="accepted_jobs"
     )
-    # comments
+    comments = relationship("Comment", back_populates="job")
 
 
 class UserJob(Timestamp, Base):
