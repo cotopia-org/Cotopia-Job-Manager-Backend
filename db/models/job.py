@@ -1,4 +1,4 @@
-import enum as pyEnum
+from enum import Enum as pyEnum
 
 from sqlalchemy import JSON, Boolean, Column, DateTime, Enum, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
