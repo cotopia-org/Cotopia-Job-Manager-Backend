@@ -6,3 +6,4 @@ sqlalchemy-utils
 psycopg2
 asyncpg
 alembic
+python-dotenv
