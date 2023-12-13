@@ -13,12 +13,9 @@ class CommentCreate(CommentBase):
     ...
 
 
-class CommentDelete(CommentBase):
-    is_archived: bool
-
-
 class CommentUpdate(CommentCreate):
-    body: str
+    body: str | None = None
+    is_archived: bool | None = None
 
 
 class Comment(CommentUpdate):
