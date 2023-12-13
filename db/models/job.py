@@ -1,15 +1,17 @@
 import enum as pyEnum
 
 from sqlalchemy import JSON, Column, DateTime, Enum, ForeignKey, Integer, String
+from sqlalchemy.orm import relationship
+
 
 from ..db_setup import Base
 from .mixins import Timestamp
 
 
-class JobStatus(pyEnum.IntEnum):
-    todo = 1
-    doing = 2
-    done = 3
+class JobStatus(pyEnum):
+    todo = "todo"
+    doing = "doing"
+    done = "done"
 
 
 class Job(Timestamp, Base):
@@ -22,7 +24,13 @@ class Job(Timestamp, Base):
     tags = Column(JSON, nullable=True)
     weights = Column(JSON, nullable=True)
     deadline = Column(DateTime, nullable=True)
-    status = Column(Enum(JobStatus), nullable=False)
-    creator = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
-    # acceptors
+    status = Column(Enum(JobStatus), nullable=False, default="todo")
+    creator_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    acceptor_users = relationship("User", secondary="users_jobs", back_populates="jobs")
     # comments
+
+
+class UserJob(Timestamp, Base):
+    __tablename__ = "users_jobs"
+    user_id = Column(Integer, ForeignKey('users.id'), primary_key=True)
+    job_id = Column(Integer, ForeignKey('jobs.id'), primary_key=True)

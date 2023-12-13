@@ -1,6 +1,8 @@
 import enum as pyEnum
 
 from sqlalchemy import BigInteger, Boolean, Column, Enum, Integer, String
+from sqlalchemy.orm import relationship
+
 
 from ..db_setup import Base
 from .mixins import Timestamp
@@ -21,8 +23,4 @@ class User(Timestamp, Base):
     first_name = Column(String(50), nullable=True)
     last_name = Column(String(50), nullable=True)
     discord_user_id = Column(BigInteger, nullable=True)
-
-    # student_courses = relationship("StudentCourse", back_populates="student")
-    # student_content_blocks = relationship(
-    #     "CompletedContentBlock", back_populates="student"
-    # )
+    jobs = relationship("Job", secondary="users_jobs", back_populates="acceptor_users")
