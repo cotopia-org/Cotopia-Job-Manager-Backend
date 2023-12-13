@@ -5,3 +5,4 @@
 - pip install -r requirements.txt
 - build .env
 - alembic upgrade head
+- uvicorn main:app --port 4242
