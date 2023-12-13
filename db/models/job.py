@@ -3,7 +3,6 @@ import enum as pyEnum
 from sqlalchemy import JSON, Column, DateTime, Enum, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
-
 from ..db_setup import Base
 from .mixins import Timestamp
 
@@ -26,11 +25,14 @@ class Job(Timestamp, Base):
     deadline = Column(DateTime, nullable=True)
     status = Column(Enum(JobStatus), nullable=False, default="todo")
     creator_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
-    acceptor_users = relationship("User", secondary="users_jobs", back_populates="jobs")
+    creator = relationship("User", back_populates="submitted_jobs")
+    acceptor_users = relationship(
+        "User", secondary="users_jobs", back_populates="accepted_jobs"
+    )
     # comments
 
 
 class UserJob(Timestamp, Base):
     __tablename__ = "users_jobs"
-    user_id = Column(Integer, ForeignKey('users.id'), primary_key=True)
-    job_id = Column(Integer, ForeignKey('jobs.id'), primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+    job_id = Column(Integer, ForeignKey("jobs.id"), primary_key=True)
