@@ -22,6 +22,3 @@ class Comment(CommentUpdate):
     is_archived: bool
     created_at: datetime
     updated_at: datetime
-    author_id: int
-    job_id: int
-    body: str

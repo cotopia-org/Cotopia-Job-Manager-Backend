@@ -3,8 +3,8 @@ from datetime import datetime
 from pydantic import BaseModel
 
 from ..db.models.job import JobStatus
-from .user import User
 from .comment import Comment
+from .user import User
 
 
 class JobBase(BaseModel):
@@ -37,16 +37,8 @@ class Job(JobUpdate):
     created_at: datetime
     updated_at: datetime
     creator: User
-    title: str
-    workspace: str
-    description: str
-    tags: list
-    weights: dict
-    deadline: datetime
-    status: JobStatus
     acceptors: list[User]
     comments: list[Comment]
-
 
     class Config:
         orm_mode = True
