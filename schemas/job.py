@@ -1,10 +1,16 @@
 from datetime import datetime
+from enum import Enum as pyEnum
 
 from pydantic import BaseModel
 
-from ..db.models.job import JobStatus
 from .comment import Comment
 from .user import User
+
+# this should be imported from db.models
+class JobStatus(pyEnum):
+    todo = "todo"
+    doing = "doing"
+    done = "done"
 
 
 class JobBase(BaseModel):
