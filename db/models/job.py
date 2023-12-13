@@ -1,6 +1,6 @@
 import enum as pyEnum
 
-from sqlalchemy import JSON, Column, DateTime, Enum, ForeignKey, Integer, String
+from sqlalchemy import JSON, Boolean, Column, DateTime, Enum, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
 from ..db_setup import Base
@@ -17,6 +17,7 @@ class Job(Timestamp, Base):
     __tablename__ = "jobs"
 
     id = Column(Integer, primary_key=True, index=True)
+    is_archived = Column(Boolean, default=False)
     workspace = Column(String(63), nullable=False)
     title = Column(String(127), nullable=False)
     description = Column(String(511), nullable=True)
