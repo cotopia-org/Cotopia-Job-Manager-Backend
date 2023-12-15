@@ -7,9 +7,9 @@ Create Date: 2023-12-15 19:40:28.385285
 """
 from typing import Sequence, Union
 
-from alembic import op
 import sqlalchemy as sa
 
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision: str = '18f4ab1b2363'
@@ -24,7 +24,6 @@ def upgrade() -> None:
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('email', sa.String(length=100), nullable=False),
     sa.Column('hashed_password', sa.String(length=511), nullable=True),
-    sa.Column('role', sa.Enum('default', name='role'), nullable=False),
     sa.Column('is_active', sa.Boolean(), nullable=True),
     sa.Column('first_name', sa.String(length=50), nullable=True),
     sa.Column('last_name', sa.String(length=50), nullable=True),
@@ -32,6 +31,10 @@ def upgrade() -> None:
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.Column('updated_at', sa.DateTime(), nullable=False),
     sa.PrimaryKeyConstraint('id')
+    )
+    op.add_column(
+        'users',
+        sa.Column('role', sa.Enum('default', name='role'), nullable=False)
     )
     op.create_index(op.f('ix_users_email'), 'users', ['email'], unique=True)
     op.create_index(op.f('ix_users_id'), 'users', ['id'], unique=False)
@@ -44,12 +47,15 @@ def upgrade() -> None:
     sa.Column('tags', sa.JSON(), nullable=True),
     sa.Column('weights', sa.JSON(), nullable=True),
     sa.Column('deadline', sa.DateTime(), nullable=True),
-    sa.Column('status', sa.Enum('todo', 'doing', 'done', name='jobstatus'), nullable=False),
     sa.Column('creator_id', sa.Integer(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.Column('updated_at', sa.DateTime(), nullable=False),
     sa.ForeignKeyConstraint(['creator_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
+    )
+    op.add_column(
+        'jobs',
+        sa.Column('status', sa.Enum('todo', 'doing', 'done', name='jobstatus'), nullable=False)
     )
     op.create_index(op.f('ix_jobs_creator_id'), 'jobs', ['creator_id'], unique=False)
     op.create_index(op.f('ix_jobs_id'), 'jobs', ['id'], unique=False)
