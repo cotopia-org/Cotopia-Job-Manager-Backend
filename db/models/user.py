@@ -18,7 +18,7 @@ class User(Timestamp, Base):
     email = Column(String(100), unique=True, index=True, nullable=False)
     hashed_password = Column(String(511))
     role = Column(Enum(Role), nullable=False, default=1)
-    is_active = Column(Boolean, default=False)
+    is_active = Column(Boolean, default=True)
     first_name = Column(String(50), nullable=True)
     last_name = Column(String(50), nullable=True)
     discord_user_id = Column(BigInteger, nullable=True)
