@@ -1,17 +1,14 @@
+import sys
 from datetime import datetime
-from enum import Enum as pyEnum
 
 from pydantic import BaseModel
 
 from .comment import Comment
 from .jobuser import JobUser
 
+sys.path.append("..")
 
-# this should be imported from db.models
-class JobStatus(pyEnum):
-    todo = "todo"
-    doing = "doing"
-    done = "done"
+from db.models.job import JobStatus  # noqa E402
 
 
 class JobBase(BaseModel):
