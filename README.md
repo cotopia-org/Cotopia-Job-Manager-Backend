@@ -4,5 +4,6 @@
 - source .venv/bin/activate
 - pip install -r requirements.txt
 - build .env
+- alembic revision --autogenerate
 - alembic upgrade head
-- uvicorn main:app --port 4242
+- pm2 start "uvicorn main:app --port 4242" --name jm-api
