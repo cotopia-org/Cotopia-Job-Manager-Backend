@@ -41,7 +41,7 @@ class Job(JobUpdate):
     created_at: datetime
     updated_at: datetime
     creator: JobUser
-    acceptors: list[JobUser]
+    acceptor_users: list[JobUser]
     comments: list[Comment]
 
     class Config:
