@@ -4,7 +4,8 @@ from enum import Enum as pyEnum
 from pydantic import BaseModel
 
 from .comment import Comment
-from .user import User
+from .jobuser import JobUser
+
 
 # this should be imported from db.models
 class JobStatus(pyEnum):
@@ -42,8 +43,8 @@ class Job(JobUpdate):
     is_archived: bool
     created_at: datetime
     updated_at: datetime
-    creator: User
-    acceptors: list[User]
+    creator: JobUser
+    acceptors: list[JobUser]
     comments: list[Comment]
 
     class Config:
