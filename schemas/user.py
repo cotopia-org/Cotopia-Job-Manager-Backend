@@ -2,11 +2,12 @@ from datetime import datetime
 
 from pydantic import BaseModel
 
-# from .job import Job
+from .job import Job
 
 
 class UserBase(BaseModel):
     email: str
+
 
 class UserCreate(UserBase):
     password: str
@@ -25,8 +26,8 @@ class User(UserUpdate):
     role: int
     created_at: datetime
     updated_at: datetime
-    # submitted_jobs: list[Job]
-    # accepted_jobs: list[Job]
+    submitted_jobs: list[Job]
+    accepted_jobs: list[Job]
 
     class Config:
         orm_mode = True
