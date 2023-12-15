@@ -24,7 +24,7 @@ class Job(Timestamp, Base):
     tags = Column(JSON, nullable=True)
     weights = Column(JSON, nullable=True)
     deadline = Column(DateTime, nullable=True)
-    status = Column(Enum(JobStatus), nullable=False, default="todo")
+    status = Column(Enum(JobStatus), nullable=False, default=JobStatus.todo)
     creator_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     creator = relationship("User", back_populates="submitted_jobs")
     acceptor_users = relationship(
