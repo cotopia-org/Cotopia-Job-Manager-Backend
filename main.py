@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from api import comments, jobs, users
 from db.db_setup import engine
@@ -16,6 +17,20 @@ app = FastAPI(
         "name": "Ali Kharrati",
         "email": "ali.kharrati@gmail.com",
     },
+    servers=[
+        {"url": "https://jobs.cotopia.social", "description": "Staging environment"},
+        {"url": "http://127.0.0.1:8000", "description": "Local environment"},
+    ],
+)
+
+origins = ["https://jobs.cotopia.social", "https://jobs.cotopia.social/"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 app.include_router(users.router)
