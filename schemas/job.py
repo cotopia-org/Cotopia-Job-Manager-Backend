@@ -1,14 +1,11 @@
-import sys
 from datetime import datetime
 
 from pydantic import BaseModel
 
+from db.models.job import JobStatus
+
 from .comment import Comment
 from .jobuser import JobUser
-
-sys.path.append("..")
-
-from db.models.job import JobStatus  # noqa E402
 
 
 class JobBase(BaseModel):
