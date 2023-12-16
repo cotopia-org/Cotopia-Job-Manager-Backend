@@ -24,22 +24,25 @@ class JobCreate(JobBase):
 class JobUpdate(JobCreate):
     title: str | None = None
     workspace: str | None = None
-    description: str | None = None
-    tags: list | None = None
-    weights: dict | None = None
-    deadline: datetime | None = None
     status: JobStatus | None = None
     is_archived: bool | None = None
 
 
 class Job(JobUpdate):
     id: int
-    is_archived: bool
     created_at: datetime
     updated_at: datetime
     creator: JobUser
     acceptor_users: list[JobUser]
     comments: list[Comment]
+
+    class Config:
+        orm_mode = True
+
+
+class MinimalJob(JobUpdate):
+    id: int
+    created_at: datetime
 
     class Config:
         orm_mode = True
