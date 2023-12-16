@@ -4,7 +4,14 @@ import fastapi
 from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from api.utils.jobs import create_job, edit_job, get_all_jobs, get_job_by_id
+from api.utils.jobs import (
+    accept_job,
+    create_job,
+    decline_job,
+    edit_job,
+    get_all_jobs,
+    get_job_by_id,
+)
 from db.db_setup import get_db
 from schemas.job import Job, JobCreate, JobUpdate
 
@@ -47,3 +54,13 @@ async def remove_job(job_id: int, db: Session = Depends(get_db)):
     else:
         job = JobUpdate(is_archived=True)
         edit_job(db=db, comment_id=job_id, job=job)
+
+
+@router.get("/jobs/accept/{job_id}/{user_id}", status_code=200)
+async def accept(job_id: int, user_id: int, db: Session = Depends(get_db)):
+    return accept_job(db=db, job_id=job_id, user_id=user_id)
+
+
+@router.get("/jobs/decline/{job_id}/{user_id}", status_code=200)
+async def decline(job_id: int, user_id: int, db: Session = Depends(get_db)):
+    return decline_job(db=db, job_id=job_id, user_id=user_id)

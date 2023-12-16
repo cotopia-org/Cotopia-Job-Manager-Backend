@@ -1,8 +1,10 @@
 from datetime import datetime
 
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from db.models.job import Job as JobModel
+from db.models.job import UserJob as UserJobModel
 from schemas.job import JobCreate, JobUpdate
 
 
@@ -47,3 +49,29 @@ def delete_job(db: Session, job_id: int):
     db.add(db_comment)
     db.commit()
     return db_comment
+
+
+def accept_job(db: Session, job_id: int, user_id: int):
+    the_accept = db.query(UserJobModel).get({"job_id": job_id, "user_id": user_id})
+    if the_accept:
+        raise HTTPException(status_code=400, detail="The job is already accepted!")
+    else:
+        the_accept = UserJobModel(user_id=user_id, job_id=job_id)
+        db.add(the_accept)
+        db.commit()
+        db.refresh(the_accept)
+        return the_accept
+
+
+def decline_job(db: Session, job_id: int, user_id: int):
+    the_accept = db.query(UserJobModel).get({"job_id": job_id, "user_id": user_id})
+    if the_accept:
+        db.query(UserJobModel).filter(
+            UserJobModel.job_id == job_id and UserJobModel.user_id == user_id
+        ).delete()
+        db.commit()
+        return the_accept
+    else:
+        raise HTTPException(
+            status_code=404, detail="Not found! The Job was not accepted by the user!"
+        )
