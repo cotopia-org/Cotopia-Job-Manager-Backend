@@ -27,7 +27,7 @@ def get_password_hash(password):
 
 
 def create_user(db: Session, user: UserCreate):
-    if len(user.password) <= 8:
+    if len(user.password) < 8:
         raise PASS_NOTACCEPTABLE
     hashed_password = get_password_hash(user.password)
     db_user = UserModel(email=user.email, hashed_password=hashed_password)
@@ -46,7 +46,7 @@ def edit_user(db: Session, user_id: int, user: UserUpdate):
             setattr(db_user, var, value)
 
     if getattr(user, "password", None):
-        if len(user.password) <= 8:
+        if len(user.password) < 8:
             raise PASS_NOTACCEPTABLE
         hashed_password = get_password_hash(user.password)
         db_user.hashed_password = hashed_password
