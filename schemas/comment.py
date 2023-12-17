@@ -4,7 +4,6 @@ from pydantic import BaseModel
 
 
 class CommentBase(BaseModel):
-    author_id: int
     job_id: int
     body: str
 
@@ -20,6 +19,7 @@ class CommentUpdate(CommentCreate):
 
 class Comment(CommentUpdate):
     id: int
+    author_id: int
     is_archived: bool
     created_at: datetime
     updated_at: datetime
