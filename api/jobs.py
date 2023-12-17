@@ -26,7 +26,11 @@ async def submit_job(job: JobCreate, db: Session = Depends(get_db)):
 
 
 @router.get("/jobs/{job_id}", response_model=Job)
-async def get_a_job(job_id: int, db: Session = Depends(get_db)):
+async def get_a_job(
+    job_id: int,
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    db: Session = Depends(get_db),
+):
     db_job = get_job_by_id(db=db, job_id=job_id)
     if db_job is None:
         raise HTTPException(status_code=404, detail="Job not found!")
@@ -34,7 +38,12 @@ async def get_a_job(job_id: int, db: Session = Depends(get_db)):
 
 
 @router.get("/jobs", response_model=List[Job])
-async def get_jobs(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+async def get_jobs(
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    skip: int = 0,
+    limit: int = 100,
+    db: Session = Depends(get_db),
+):
     jobs = get_all_jobs(db=db, skip=skip, limit=limit)
     return jobs
 
