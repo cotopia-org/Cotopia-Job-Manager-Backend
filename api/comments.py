@@ -42,10 +42,19 @@ async def update_comment(
 
 
 @router.delete("/comments/{comment_id}", status_code=204)
-async def remove_comment(comment_id: int, db: Session = Depends(get_db)):
+async def remove_comment(
+    comment_id: int,
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    db: Session = Depends(get_db),
+):
     db_comment = get_comment_by_id(db=db, comment_id=comment_id)
     if db_comment is None:
         raise HTTPException(status_code=404, detail="Comment not found!")
     else:
-        comment = CommentUpdate(is_archived=True)
-        edit_comment(db=db, comment_id=comment_id, comment=comment)
+        if db_comment.author_id == current_user.id:
+            comment = CommentUpdate(is_archived=True)
+            edit_comment(db=db, comment_id=comment_id, comment=comment)
+        else:
+            raise HTTPException(
+                status_code=403, detail="You are not the author of this comment!"
+            )
