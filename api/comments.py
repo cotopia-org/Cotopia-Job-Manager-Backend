@@ -1,17 +1,25 @@
+from typing import Annotated
+
 import fastapi
 from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from api.utils.comments import edit_comment, get_comment_by_id, post_comment
+from auth import get_current_active_user
 from db.db_setup import get_db
 from schemas.comment import Comment, CommentCreate, CommentUpdate
+from schemas.user import User
 
 router = fastapi.APIRouter()
 
 
 @router.post("/comments", response_model=Comment, status_code=201)
-async def add_comment(comment: CommentCreate, db: Session = Depends(get_db)):
-    return post_comment(db=db, comment=comment)
+async def add_comment(
+    comment: CommentCreate,
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    db: Session = Depends(get_db),
+):
+    return post_comment(db=db, comment=comment, author_id=current_user.id)
 
 
 @router.put("/comments/{comment_id}", response_model=Comment, status_code=200)
