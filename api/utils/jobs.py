@@ -8,8 +8,8 @@ from db.models.job import UserJob as UserJobModel
 from schemas.job import JobCreate, JobUpdate
 
 
-def create_job(db: Session, job: JobCreate):
-    db_job = JobModel()
+def create_job(db: Session, job: JobCreate, creator_id: int):
+    db_job = JobModel(creator_id=creator_id)
     for var, value in vars(job).items():
         if value:
             setattr(db_job, var, value)
