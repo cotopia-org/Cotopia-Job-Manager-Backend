@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from os import getenv
+from dotenv import load_dotenv
 from typing import Annotated
 
 from fastapi import Depends
@@ -16,6 +17,7 @@ from schemas import user as schemas
 
 # to get a string like this run:
 # openssl rand -hex 32
+load_dotenv()
 SECRET_KEY = getenv("SECRET_KEY")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 6000

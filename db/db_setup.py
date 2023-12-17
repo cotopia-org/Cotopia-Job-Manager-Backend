@@ -1,4 +1,5 @@
 from os import getenv
+from dotenv import load_dotenv
 
 from sqlalchemy import create_engine
 
@@ -6,8 +7,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-# SQLALCHEMY_DATABASE_URL = f"postgresql+psycopg2://{getenv('POSTGRES_USER')}:{getenv('POSTGRES_PASSWORD')}@{getenv('POSTGRES_HOST')}:{getenv('POSTGRES_PORT')}/{getenv('POSTGRES_DATABASE')}"
-SQLALCHEMY_DATABASE_URL = "postgresql+psycopg2://postgres:Tp\ZS?gfLr|]'a@localhost:5432/jobmanager"
+load_dotenv()
+
+SQLALCHEMY_DATABASE_URL = f"postgresql+psycopg2://{getenv('POSTGRES_USER')}:{getenv('POSTGRES_PASSWORD')}@{getenv('POSTGRES_HOST')}:{getenv('POSTGRES_PORT')}/{getenv('POSTGRES_DATABASE')}"
+# SQLALCHEMY_DATABASE_URL = "postgresql+psycopg2://postgres:Tp\ZS?gfLr|]'a@localhost:5432/jobmanager"
 # ASYNC_SQLALCHEMY_DATABASE_URL = "postgresql+asyncpg://gwen@localhost/fast_lms"
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={}, future=True)
