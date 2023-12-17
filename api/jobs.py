@@ -1,4 +1,4 @@
-from typing import List
+from typing import Annotated, List
 
 import fastapi
 from fastapi import Depends, HTTPException
@@ -12,8 +12,10 @@ from api.utils.jobs import (
     get_all_jobs,
     get_job_by_id,
 )
+from auth import get_current_active_user
 from db.db_setup import get_db
 from schemas.job import Job, JobCreate, JobUpdate
+from schemas.user import User
 
 router = fastapi.APIRouter()
 
@@ -56,11 +58,19 @@ async def remove_job(job_id: int, db: Session = Depends(get_db)):
         edit_job(db=db, comment_id=job_id, job=job)
 
 
-@router.post("/jobs/accept/{job_id}/{user_id}", status_code=201)
-async def accept(job_id: int, user_id: int, db: Session = Depends(get_db)):
-    return accept_job(db=db, job_id=job_id, user_id=user_id)
+@router.post("/jobs/accept/{job_id}", status_code=201)
+async def accept(
+    job_id: int,
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    db: Session = Depends(get_db),
+):
+    return accept_job(db=db, job_id=job_id, user_id=current_user.id)
 
 
-@router.delete("/jobs/decline/{job_id}/{user_id}", status_code=204)
-async def decline(job_id: int, user_id: int, db: Session = Depends(get_db)):
-    decline_job(db=db, job_id=job_id, user_id=user_id)
+@router.delete("/jobs/decline/{job_id}", status_code=204)
+async def decline(
+    job_id: int,
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    db: Session = Depends(get_db),
+):
+    decline_job(db=db, job_id=job_id, user_id=current_user.id)
