@@ -37,7 +37,7 @@ async def get_jobs(skip: int = 0, limit: int = 100, db: Session = Depends(get_db
     return jobs
 
 
-@router.post("/jobs/{job_id}", response_model=Job, status_code=201)
+@router.put("/jobs/{job_id}", response_model=Job, status_code=200)
 async def update_job(job_id: int, job: JobUpdate, db: Session = Depends(get_db)):
     db_job = get_job_by_id(db=db, job_id=job_id)
     if db_job is None:
@@ -61,6 +61,6 @@ async def accept(job_id: int, user_id: int, db: Session = Depends(get_db)):
     return accept_job(db=db, job_id=job_id, user_id=user_id)
 
 
-@router.get("/jobs/decline/{job_id}/{user_id}", status_code=200)
+@router.delete("/jobs/decline/{job_id}/{user_id}", status_code=204)
 async def decline(job_id: int, user_id: int, db: Session = Depends(get_db)):
-    return decline_job(db=db, job_id=job_id, user_id=user_id)
+    decline_job(db=db, job_id=job_id, user_id=user_id)

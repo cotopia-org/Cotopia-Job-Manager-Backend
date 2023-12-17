@@ -14,7 +14,7 @@ async def add_comment(comment: CommentCreate, db: Session = Depends(get_db)):
     return post_comment(db=db, comment=comment)
 
 
-@router.post("/comments/{comment_id}", response_model=Comment, status_code=201)
+@router.put("/comments/{comment_id}", response_model=Comment, status_code=200)
 async def update_comment(
     comment_id: int, comment: CommentUpdate, db: Session = Depends(get_db)
 ):

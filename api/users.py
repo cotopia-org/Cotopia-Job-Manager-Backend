@@ -32,7 +32,7 @@ async def read_user(user_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="User not found")
     return db_user
 
-@router.post("/users/{user_id}", response_model=User, status_code=201)
+@router.put("/users/{user_id}", response_model=User, status_code=200)
 async def update_user(user_id: int, user: UserUpdate, db: Session = Depends(get_db)):
     db_user = get_user(db=db, user_id=user_id)
     if db_user:
@@ -40,8 +40,3 @@ async def update_user(user_id: int, user: UserUpdate, db: Session = Depends(get_
     else:
         raise HTTPException(status_code=404, detail="User not found")
 
-
-# @router.get("/users/{user_id}/courses", response_model=List[Course])
-# async def read_user_courses(user_id: int, db: Session = Depends(get_db)):
-#     courses = get_user_courses(user_id=user_id, db=db)
-#     return courses
