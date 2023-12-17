@@ -21,8 +21,12 @@ router = fastapi.APIRouter()
 
 
 @router.post("/jobs", response_model=Job, status_code=201)
-async def submit_job(job: JobCreate, db: Session = Depends(get_db)):
-    return create_job(db=db, job=job)
+async def submit_job(
+    job: JobCreate,
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    db: Session = Depends(get_db),
+):
+    return create_job(db=db, job=job, creator_id=current_user.id)
 
 
 @router.get("/jobs/{job_id}", response_model=Job)
