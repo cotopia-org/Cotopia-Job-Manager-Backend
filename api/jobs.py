@@ -56,7 +56,7 @@ async def remove_job(job_id: int, db: Session = Depends(get_db)):
         edit_job(db=db, comment_id=job_id, job=job)
 
 
-@router.get("/jobs/accept/{job_id}/{user_id}", status_code=200)
+@router.post("/jobs/accept/{job_id}/{user_id}", status_code=201)
 async def accept(job_id: int, user_id: int, db: Session = Depends(get_db)):
     return accept_job(db=db, job_id=job_id, user_id=user_id)
 

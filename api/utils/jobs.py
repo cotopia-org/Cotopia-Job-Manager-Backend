@@ -73,5 +73,5 @@ def decline_job(db: Session, job_id: int, user_id: int):
         return the_accept
     else:
         raise HTTPException(
-            status_code=404, detail="Not found! The Job was not accepted by the user!"
+            status_code=404, detail="Not found! This job was not accepted by the user!"
         )
