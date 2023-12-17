@@ -28,7 +28,7 @@ CONFLICT = HTTPException(
     detail="",
 )
 
-NOTACCEPTABLE = HTTPException(
+PASS_NOTACCEPTABLE = HTTPException(
     status_code=status.HTTP_406_NOT_ACCEPTABLE,
-    detail="",
+    detail="Password is too short!",
 )
