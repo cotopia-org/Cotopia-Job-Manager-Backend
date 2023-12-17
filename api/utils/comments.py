@@ -6,9 +6,9 @@ from db.models.comment import Comment as CommentModel
 from schemas.comment import CommentCreate, CommentUpdate
 
 
-def post_comment(db: Session, comment: CommentCreate):
+def post_comment(db: Session, comment: CommentCreate, author_id: int):
     db_comment = CommentModel(
-        author_id=comment.author_id, job_id=comment.job_id, body=comment.body
+        author_id=author_id, job_id=comment.job_id, body=comment.body
     )
     db.add(db_comment)
     db.commit()
