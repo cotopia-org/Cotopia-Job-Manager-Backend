@@ -28,13 +28,22 @@ router = fastapi.APIRouter()
 
 
 @router.get("/users", response_model=List[User])
-async def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+async def read_users(
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    skip: int = 0,
+    limit: int = 100,
+    db: Session = Depends(get_db),
+):
     users = get_users(db, skip=skip, limit=limit)
     return users
 
 
 @router.get("/users/{user_id}", response_model=User)
-async def read_user(user_id: int, db: Session = Depends(get_db)):
+async def read_user(
+    user_id: int,
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    db: Session = Depends(get_db),
+):
     db_user = get_user(db=db, user_id=user_id)
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
