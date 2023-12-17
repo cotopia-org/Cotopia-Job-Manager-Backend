@@ -9,7 +9,6 @@ from .jobuser import JobUser
 
 
 class JobBase(BaseModel):
-    creator_id: int
     title: str
     workspace: str
 
@@ -42,6 +41,7 @@ class Job(JobUpdate):
 
 class MinimalJob(JobUpdate):
     id: int
+    creator_id: int
     created_at: datetime
 
     class Config:
