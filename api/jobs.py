@@ -49,13 +49,20 @@ async def update_job(job_id: int, job: JobUpdate, db: Session = Depends(get_db))
 
 
 @router.delete("/jobs/{job_id}", status_code=204)
-async def remove_job(job_id: int, db: Session = Depends(get_db)):
+async def remove_job(
+    job_id: int,
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    db: Session = Depends(get_db),
+):
     db_job = get_job_by_id(db=db, job_id=job_id)
     if db_job is None:
         raise HTTPException(status_code=404, detail="Job not found!")
     else:
-        job = JobUpdate(is_archived=True)
-        edit_job(db=db, comment_id=job_id, job=job)
+        if (db_job.id == current_user.id):
+            job = JobUpdate(is_archived=True)
+            edit_job(db=db, comment_id=job_id, job=job)
+        else:
+            raise HTTPException(status_code=403, detail="You are not the creator of this job!")
 
 
 @router.post("/jobs/accept/{job_id}", status_code=201)
