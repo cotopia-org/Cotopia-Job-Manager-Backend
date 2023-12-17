@@ -10,10 +10,9 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from api.utils import users as crud
+from common.http_exceptions import UNAUTHENTICATED, UNAUTHORIZED
 from db.db_setup import get_db
 from schemas import user as schemas
-
-from common.http_exceptions import UNAUTHENTICATED, UNAUTHORIZED
 
 # to get a string like this run:
 # openssl rand -hex 32
