@@ -16,7 +16,6 @@ config = context.config
 # my shit
 load_dotenv()
 SQLALCHEMY_DATABASE_URL = f"postgresql+psycopg2://{getenv('POSTGRES_USER')}:{getenv('POSTGRES_PASSWORD')}@{getenv('POSTGRES_HOST')}:{getenv('POSTGRES_PORT')}/{getenv('POSTGRES_DATABASE')}"
-# SQLALCHEMY_DATABASE_URL = "postgresql+psycopg2://postgres:Tp\ZS?gfLr|]'a@localhost:5432/jobmanager"
 config.set_main_option("sqlalchemy.url", SQLALCHEMY_DATABASE_URL)
 
 # Interpret the config file for Python logging.
