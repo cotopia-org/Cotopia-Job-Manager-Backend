@@ -11,13 +11,13 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     password: str
+    discord_user_id: int | None = None
 
 
 class UserUpdate(UserCreate):
     password: str | None = None
     first_name: str | None = None
     last_name: str | None = None
-    discord_user_id: int | None = None
 
 
 class User(UserUpdate):
