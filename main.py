@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from api import comments, jobs, users
+from api import comments, jobs, users, bot
 from db.db_setup import engine
 from db.models import comment, job, user
 
@@ -36,3 +36,4 @@ app.add_middleware(
 app.include_router(users.router)
 app.include_router(comments.router)
 app.include_router(jobs.router)
+app.include_router(bot.router)
