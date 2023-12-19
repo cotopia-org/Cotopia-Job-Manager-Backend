@@ -24,6 +24,8 @@ def get_user_id(db: Session, bots_data: dict):
     if db_user:
         return db_user.id
     else:
-        our_user = UserCreate(email=email, password=password)
+        our_user = UserCreate(
+            email=email, password=password, discord_user_id=bots_data["discord_id"]
+        )
         db_user = create_user(db=db, user=our_user)
         return db_user.id
