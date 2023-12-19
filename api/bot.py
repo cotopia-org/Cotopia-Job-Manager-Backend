@@ -6,7 +6,7 @@ from api.utils.bot import get_user_id
 from api.utils.jobs import create_job
 from bot_auth import decode_token
 from db.db_setup import get_db
-from schemas.job import JobCreate
+from schemas.job import Job, JobCreate
 
 router = fastapi.APIRouter()
 
@@ -41,7 +41,7 @@ async def bot_hello(request: Request):
     return d
 
 
-@router.post("/bot/job", status_code=201)
+@router.post("/bot/job", response_model=Job, status_code=201)
 async def submit_job_as_a_bot(
     job: JobCreate, request: Request, db: Session = Depends(get_db)
 ):
