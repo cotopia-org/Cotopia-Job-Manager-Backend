@@ -124,8 +124,8 @@ async def get_the_accepted_job(
     return db_accept
 
 
-@router.get("/jobs/{user_id}/accepts", response_model=List[AcceptedJob])
-async def get_user_accepts(
+@router.get("/accepted_jobs/{user_id}", response_model=List[AcceptedJob])
+async def get_accepts(
     user_id: int,
     current_user: Annotated[User, Depends(get_current_active_user)],
     skip: int = 0,
