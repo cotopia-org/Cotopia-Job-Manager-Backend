@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from db.models.job import Job as JobModel
 from db.models.job import UserJob as UserJobModel
 from schemas.job import JobCreate, JobUpdate
+from schemas.userjob import AcceptedJobUpdate
 
 
 def create_job(db: Session, job: JobCreate, creator_id: int):
@@ -88,3 +89,16 @@ def get_an_accepted_job(db: Session, job_id: int, user_id: int):
 def get_accepted_jobs(db: Session, user_id: int, skip: int = 0, limit: int = 100):
     q = db.query(UserJobModel).filter(UserJobModel.user_id == user_id)
     return q.offset(skip).limit(limit).all()
+
+
+def edit_accepted_job(db: Session, job_id: int, user_id: int, aj: AcceptedJobUpdate):
+    db_aj = db.query(UserJobModel).get({"job_id": job_id, "user_id": user_id})
+    db_aj.updated_at = datetime.now(datetime.timezone.utc)
+
+    for var, value in vars(aj).items():
+        if value:
+            setattr(db_aj, var, value)
+
+    db.add(db_aj)
+    db.commit()
+    return db_aj
