@@ -75,3 +75,16 @@ def decline_job(db: Session, job_id: int, user_id: int):
         raise HTTPException(
             status_code=404, detail="Not found! This job was not accepted by the user!"
         )
+
+
+def get_an_accepted_job(db: Session, job_id: int, user_id: int):
+    return (
+        db.query(UserJobModel)
+        .filter(UserJobModel.job_id == job_id and UserJobModel.user_id == user_id)
+        .first()
+    )
+
+
+def get_accepted_jobs(db: Session, user_id: int, skip: int = 0, limit: int = 100):
+    q = db.query(UserJobModel).filter(UserJobModel.user_id == user_id)
+    return q.offset(skip).limit(limit).all()
