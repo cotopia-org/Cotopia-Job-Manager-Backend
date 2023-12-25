@@ -37,3 +37,4 @@ class UserJob(Timestamp, Base):
     __tablename__ = "users_jobs"
     user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
     job_id = Column(Integer, ForeignKey("jobs.id"), primary_key=True)
+    acceptor_status = Column(Enum(JobStatus), nullable=False, default=JobStatus.todo)
