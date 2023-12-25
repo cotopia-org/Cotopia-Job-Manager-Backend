@@ -10,3 +10,7 @@ class AcceptedJobBase(BaseModel):
 
 class AcceptedJob(AcceptedJobBase):
     acceptor_status: JobStatus
+
+
+class AcceptedJobUpdate(BaseModel):
+    acceptor_status: JobStatus
