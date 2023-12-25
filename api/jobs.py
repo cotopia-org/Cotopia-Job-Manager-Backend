@@ -9,13 +9,16 @@ from api.utils.jobs import (
     create_job,
     decline_job,
     edit_job,
+    get_accepted_jobs,
     get_all_jobs,
+    get_an_accepted_job,
     get_job_by_id,
 )
 from auth import get_current_active_user
 from db.db_setup import get_db
 from schemas.job import Job, JobCreate, JobUpdate
 from schemas.user import User
+from schemas.userjob import AcceptedJob
 
 router = fastapi.APIRouter()
 
@@ -106,3 +109,28 @@ async def decline(
     db: Session = Depends(get_db),
 ):
     decline_job(db=db, job_id=job_id, user_id=current_user.id)
+
+
+@router.get("/jobs/{job_id}/{user_id}", response_model=AcceptedJob)
+async def get_the_accepted_job(
+    job_id: int,
+    user_id: int,
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    db: Session = Depends(get_db),
+):
+    db_accept = get_an_accepted_job(db=db, job_id=job_id, user_id=user_id)
+    if db_accept is None:
+        raise HTTPException(status_code=404, detail="The accepted job not found!")
+    return db_accept
+
+
+@router.get("/jobs/{user_id}/accepts", response_model=List[AcceptedJob])
+async def get_user_accepts(
+    user_id: int,
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    skip: int = 0,
+    limit: int = 100,
+    db: Session = Depends(get_db),
+):
+    accepts = get_accepted_jobs(db=db, user_id=user_id, skip=skip, limit=limit)
+    return accepts
