@@ -8,6 +8,7 @@ from api.utils.jobs import (
     accept_job,
     create_job,
     decline_job,
+    edit_accepted_job,
     edit_job,
     get_accepted_jobs,
     get_all_jobs,
@@ -18,7 +19,7 @@ from auth import get_current_active_user
 from db.db_setup import get_db
 from schemas.job import Job, JobCreate, JobUpdate
 from schemas.user import User
-from schemas.userjob import AcceptedJob
+from schemas.userjob import AcceptedJob, AcceptedJobUpdate
 
 router = fastapi.APIRouter()
 
@@ -122,6 +123,28 @@ async def get_the_accepted_job(
     if db_accept is None:
         raise HTTPException(status_code=404, detail="The accepted job not found!")
     return db_accept
+
+
+@router.put("/jobs/{job_id}/{user_id}", response_model=AcceptedJob, status_code=200)
+async def update_the_accepted_job(
+    job_id: int,
+    user_id: int,
+    accepted_job: AcceptedJobUpdate,
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    db: Session = Depends(get_db),
+):
+    db_accept = get_an_accepted_job(db=db, job_id=job_id, user_id=user_id)
+    if db_accept is None:
+        raise HTTPException(status_code=404, detail="The accepted job not found!")
+    else:
+        if db_accept.user_id == current_user.id:
+            return edit_accepted_job(
+                db=db, job_id=job_id, user_id=user_id, aj=accepted_job
+            )
+        else:
+            raise HTTPException(
+                status_code=403, detail="You are not the acceptor of this job!"
+            )
 
 
 @router.get("/accepted_jobs/{user_id}", response_model=List[AcceptedJob])
