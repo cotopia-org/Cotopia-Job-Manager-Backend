@@ -67,7 +67,7 @@ async def update_job(
     if db_job is None:
         raise HTTPException(status_code=404, detail="Job not found!")
     else:
-        if db_job.id == current_user.id:
+        if db_job.creator_id == current_user.id:
             return edit_job(db=db, job_id=job_id, job=job)
         else:
             raise HTTPException(
@@ -85,7 +85,7 @@ async def remove_job(
     if db_job is None:
         raise HTTPException(status_code=404, detail="Job not found!")
     else:
-        if db_job.id == current_user.id:
+        if db_job.creator_id == current_user.id:
             job = JobUpdate(is_archived=True)
             edit_job(db=db, comment_id=job_id, job=job)
         else:
