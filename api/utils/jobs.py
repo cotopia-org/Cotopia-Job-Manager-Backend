@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime
 
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
@@ -31,7 +31,7 @@ def get_all_jobs(db: Session, skip: int = 0, limit: int = 100):
 
 def edit_job(db: Session, job_id: int, job: JobUpdate):
     db_job = db.query(JobModel).get(job_id)
-    db_job.updated_at = datetime.now(datetime.timezone.utc)
+    db_job.updated_at = datetime.datetime.now(datetime.timezone.utc)
 
     for var, value in vars(job).items():
         if value:
@@ -44,7 +44,7 @@ def edit_job(db: Session, job_id: int, job: JobUpdate):
 
 def delete_job(db: Session, job_id: int):
     db_comment = db.query(JobModel).get(job_id)
-    db_comment.updated_at = datetime.now(datetime.timezone.utc)
+    db_comment.updated_at = datetime.datetime.now(datetime.timezone.utc)
     db_comment.is_archived = True
 
     db.add(db_comment)
@@ -93,7 +93,7 @@ def get_accepted_jobs(db: Session, user_id: int, skip: int = 0, limit: int = 100
 
 def edit_accepted_job(db: Session, job_id: int, user_id: int, aj: AcceptedJobUpdate):
     db_aj = db.query(UserJobModel).get({"job_id": job_id, "user_id": user_id})
-    db_aj.updated_at = datetime.now(datetime.timezone.utc)
+    db_aj.updated_at = datetime.datetime.now(datetime.timezone.utc)
 
     for var, value in vars(aj).items():
         if value:
