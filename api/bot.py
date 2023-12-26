@@ -3,7 +3,7 @@ from fastapi import Depends, HTTPException, Request, status
 from sqlalchemy.orm import Session
 
 from api.utils.bot import get_user_id
-from api.utils.jobs import create_job
+from api.utils.jobs import accept_job, create_job
 from bot_auth import decode_token
 from db.db_setup import get_db
 from schemas.job import Job, JobCreate
@@ -48,3 +48,14 @@ async def submit_job_as_a_bot(
     bots_data = read_token(request.headers.get("Authorization"))
     user_id = get_user_id(db=db, bots_data=bots_data)
     return create_job(db=db, job=job, creator_id=user_id)
+
+
+@router.post("/bot/accept/{job_id}", status_code=201)
+async def accept(
+    job_id: int,
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    bots_data = read_token(request.headers.get("Authorization"))
+    user_id = get_user_id(db=db, bots_data=bots_data)
+    return accept_job(db=db, job_id=job_id, user_id=user_id)
