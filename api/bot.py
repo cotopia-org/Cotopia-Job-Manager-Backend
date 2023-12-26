@@ -1,12 +1,15 @@
+from typing import List
+
 import fastapi
 from fastapi import Depends, HTTPException, Request, status
 from sqlalchemy.orm import Session
 
 from api.utils.bot import get_user_id
-from api.utils.jobs import accept_job, create_job
+from api.utils.jobs import accept_job, create_job, get_accepted_jobs
 from bot_auth import decode_token
 from db.db_setup import get_db
 from schemas.job import Job, JobCreate
+from schemas.userjob import AcceptedJob
 
 router = fastapi.APIRouter()
 
@@ -59,3 +62,16 @@ async def accept(
     bots_data = read_token(request.headers.get("Authorization"))
     user_id = get_user_id(db=db, bots_data=bots_data)
     return accept_job(db=db, job_id=job_id, user_id=user_id)
+
+
+@router.get("/bot/accepted_jobs/me", response_model=List[AcceptedJob])
+async def get_accepts(
+    request: Request,
+    skip: int = 0,
+    limit: int = 100,
+    db: Session = Depends(get_db),
+):
+    bots_data = read_token(request.headers.get("Authorization"))
+    user_id = get_user_id(db=db, bots_data=bots_data)
+    accepts = get_accepted_jobs(db=db, user_id=user_id, skip=skip, limit=limit)
+    return accepts
