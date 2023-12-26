@@ -1,6 +1,15 @@
 from enum import Enum as pyEnum
 
-from sqlalchemy import JSON, Boolean, Column, DateTime, Enum, ForeignKey, Integer, String
+from sqlalchemy import (
+    JSON,
+    Boolean,
+    Column,
+    DateTime,
+    Enum,
+    ForeignKey,
+    Integer,
+    String,
+)
 from sqlalchemy.orm import relationship
 
 from ..db_setup import Base
@@ -36,5 +45,7 @@ class Job(Timestamp, Base):
 class UserJob(Timestamp, Base):
     __tablename__ = "users_jobs"
     user_id = Column(Integer, ForeignKey("users.id"), primary_key=True)
+    user = relationship("User")
     job_id = Column(Integer, ForeignKey("jobs.id"), primary_key=True)
+    job = relationship("Job")
     acceptor_status = Column(Enum(JobStatus), nullable=False, default=JobStatus.todo)
