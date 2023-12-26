@@ -31,3 +31,12 @@ class User(UserUpdate):
 
     class Config:
         orm_mode = True
+
+
+class MinimalUser(UserUpdate):
+    id: int
+    is_active: bool
+    role: int
+
+    class Config:
+        orm_mode = True
