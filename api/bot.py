@@ -5,11 +5,17 @@ from fastapi import Depends, HTTPException, Request, status
 from sqlalchemy.orm import Session
 
 from api.utils.bot import get_user_id
-from api.utils.jobs import accept_job, create_job, get_accepted_jobs
+from api.utils.jobs import (
+    accept_job,
+    create_job,
+    edit_accepted_job,
+    get_accepted_jobs,
+    get_an_accepted_job,
+)
 from bot_auth import decode_token
 from db.db_setup import get_db
 from schemas.job import Job, JobCreate
-from schemas.userjob import AcceptedJob
+from schemas.userjob import AcceptedJob, AcceptedJobUpdate
 
 router = fastapi.APIRouter()
 
@@ -75,3 +81,26 @@ async def get_accepts(
     user_id = get_user_id(db=db, bots_data=bots_data)
     accepts = get_accepted_jobs(db=db, user_id=user_id, skip=skip, limit=limit)
     return accepts
+
+
+@router.put("/bot/accepted_jobs/{job_id}", response_model=AcceptedJob, status_code=200)
+async def update_the_accepted_job(
+    job_id: int,
+    accepted_job: AcceptedJobUpdate,
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    bots_data = read_token(request.headers.get("Authorization"))
+    user_id = get_user_id(db=db, bots_data=bots_data)
+    db_accept = get_an_accepted_job(db=db, job_id=job_id, user_id=user_id)
+    if db_accept is None:
+        raise HTTPException(status_code=404, detail="The accepted job not found!")
+    else:
+        if db_accept.user_id == user_id:
+            return edit_accepted_job(
+                db=db, job_id=job_id, user_id=user_id, aj=accepted_job
+            )
+        else:
+            raise HTTPException(
+                status_code=403, detail="You are not the acceptor of this job!"
+            )
