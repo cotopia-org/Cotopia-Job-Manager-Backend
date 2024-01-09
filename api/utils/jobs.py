@@ -68,7 +68,7 @@ def decline_job(db: Session, job_id: int, user_id: int):
     the_accept = db.query(UserJobModel).get({"job_id": job_id, "user_id": user_id})
     if the_accept:
         db.query(UserJobModel).filter(
-            UserJobModel.job_id == job_id and UserJobModel.user_id == user_id
+            UserJobModel.job_id == job_id, UserJobModel.user_id == user_id
         ).delete()
         db.commit()
         return the_accept
@@ -81,7 +81,7 @@ def decline_job(db: Session, job_id: int, user_id: int):
 def get_an_accepted_job(db: Session, job_id: int, user_id: int):
     return (
         db.query(UserJobModel)
-        .filter(UserJobModel.job_id == job_id and UserJobModel.user_id == user_id)
+        .filter(UserJobModel.job_id == job_id, UserJobModel.user_id == user_id)
         .first()
     )
 
@@ -95,7 +95,7 @@ def get_accepted_jobs_by_status(
     db: Session, user_id: int, status: str, skip: int = 0, limit: int = 100
 ):
     q = db.query(UserJobModel).filter(
-        UserJobModel.user_id == user_id and UserJobModel.acceptor_status.is_(status)
+        UserJobModel.user_id == user_id, UserJobModel.acceptor_status == status
     )
     return q.offset(skip).limit(limit).all()
 
