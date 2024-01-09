@@ -10,6 +10,7 @@ from api.utils.jobs import (
     create_job,
     edit_accepted_job,
     get_accepted_jobs,
+    get_accepted_jobs_by_status,
     get_an_accepted_job,
 )
 from bot_auth import decode_token
@@ -80,6 +81,22 @@ async def get_accepts(
     bots_data = read_token(request.headers.get("Authorization"))
     user_id = get_user_id(db=db, bots_data=bots_data)
     accepts = get_accepted_jobs(db=db, user_id=user_id, skip=skip, limit=limit)
+    return accepts
+
+
+@router.get("/bot/accepted_jobs/me/{status}", response_model=List[AcceptedJob])
+async def get_todos(
+    status: str,
+    request: Request,
+    skip: int = 0,
+    limit: int = 100,
+    db: Session = Depends(get_db),
+):
+    bots_data = read_token(request.headers.get("Authorization"))
+    user_id = get_user_id(db=db, bots_data=bots_data)
+    accepts = get_accepted_jobs_by_status(
+        db=db, user_id=user_id, status=status, skip=skip, limit=limit
+    )
     return accepts
 
 

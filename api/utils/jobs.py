@@ -91,6 +91,15 @@ def get_accepted_jobs(db: Session, user_id: int, skip: int = 0, limit: int = 100
     return q.offset(skip).limit(limit).all()
 
 
+def get_accepted_jobs_by_status(
+    db: Session, user_id: int, status: str, skip: int = 0, limit: int = 100
+):
+    q = db.query(UserJobModel).filter(
+        UserJobModel.user_id == user_id and UserJobModel.acceptor_status == status
+    )
+    return q.offset(skip).limit(limit).all()
+
+
 def edit_accepted_job(db: Session, job_id: int, user_id: int, aj: AcceptedJobUpdate):
     db_aj = db.query(UserJobModel).get({"job_id": job_id, "user_id": user_id})
     db_aj.updated_at = datetime.datetime.now(datetime.timezone.utc)
