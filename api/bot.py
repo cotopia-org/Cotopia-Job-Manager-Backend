@@ -84,7 +84,7 @@ async def get_accepts(
     return accepts
 
 
-@router.get("/bot/accepted_jobs/me/{status}", response_model=List[AcceptedJob])
+@router.get("/bot/aj/me/by/{status}", response_model=List[AcceptedJob])
 async def get_by_status(
     status: str,
     request: Request,
