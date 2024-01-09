@@ -95,7 +95,7 @@ def get_accepted_jobs_by_status(
     db: Session, user_id: int, status: str, skip: int = 0, limit: int = 100
 ):
     q = db.query(UserJobModel).filter(
-        UserJobModel.user_id == user_id and UserJobModel.acceptor_status == status
+        UserJobModel.user_id == user_id and UserJobModel.acceptor_status.is_(status)
     )
     return q.offset(skip).limit(limit).all()
 
