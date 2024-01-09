@@ -15,6 +15,7 @@ from api.utils.jobs import (
 )
 from bot_auth import decode_token
 from db.db_setup import get_db
+from db.models.job import JobStatus
 from schemas.job import Job, JobCreate
 from schemas.userjob import AcceptedJob, AcceptedJobUpdate
 
@@ -86,7 +87,7 @@ async def get_accepts(
 
 @router.get("/bot/aj/me/by/{status}", response_model=List[AcceptedJob])
 async def get_by_status(
-    status: str,
+    status: JobStatus,
     request: Request,
     skip: int = 0,
     limit: int = 100,
