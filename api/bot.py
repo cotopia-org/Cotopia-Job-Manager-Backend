@@ -12,6 +12,7 @@ from api.utils.jobs import (
     get_accepted_jobs,
     get_accepted_jobs_by_status,
     get_an_accepted_job,
+    get_job_by_id,
 )
 from bot_auth import decode_token
 from db.db_setup import get_db
@@ -122,3 +123,13 @@ async def update_the_accepted_job(
             raise HTTPException(
                 status_code=403, detail="You are not the acceptor of this job!"
             )
+
+
+@router.get("/bot/job/{job_id}", response_model=Job)
+async def get_a_job(job_id: int, request: Request, db: Session = Depends(get_db)):
+    bots_data = read_token(request.headers.get("Authorization"))
+    print(f"this is the bots data: {bots_data}")
+    db_job = get_job_by_id(db=db, job_id=job_id)
+    if db_job is None:
+        raise HTTPException(status_code=404, detail="Job not found!")
+    return db_job
