@@ -4,6 +4,7 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from db.models.job import Job as JobModel
+from db.models.job import JobStatus
 from db.models.job import UserJob as UserJobModel
 from schemas.job import JobCreate, JobUpdate
 from schemas.userjob import AcceptedJobUpdate
@@ -26,6 +27,11 @@ def get_job_by_id(db: Session, job_id: int):
 
 def get_all_jobs(db: Session, skip: int = 0, limit: int = 100):
     q = db.query(JobModel)
+    return q.offset(skip).limit(limit).all()
+
+
+def get_todo_jobs(db: Session, skip: int = 0, limit: int = 100):
+    q = db.query(JobModel).filter(JobModel.status == JobStatus.todo)
     return q.offset(skip).limit(limit).all()
 
 
