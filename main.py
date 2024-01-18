@@ -18,12 +18,12 @@ app = FastAPI(
         "email": "ali.kharrati@gmail.com",
     },
     servers=[
-        {"url": "https://jobs.cotopia.social", "description": "Staging environment"},
+        {"url": "https://jobs-api.cotopia.social", "description": "Staging environment"},
         {"url": "http://127.0.0.1:8000", "description": "Local environment"},
     ],
 )
 
-origins = ["https://jobs.cotopia.social", "https://jobs.cotopia.social/"]
+origins = ["https://jobs-api.cotopia.social", "https://jobs-api.cotopia.social/"]
 
 app.add_middleware(
     CORSMiddleware,
