@@ -13,6 +13,7 @@ from api.utils.jobs import (
     get_accepted_jobs_by_status,
     get_an_accepted_job,
     get_job_by_id,
+    get_jobs_by_status_and_workspace_prefix,
 )
 from bot_auth import decode_token
 from db.db_setup import get_db
@@ -133,3 +134,19 @@ async def get_a_job(job_id: int, request: Request, db: Session = Depends(get_db)
     if db_job is None:
         raise HTTPException(status_code=404, detail="Job not found!")
     return db_job
+
+
+@router.get("/bot/jobs/{status}", response_model=List[Job])
+async def get_jobs_by_status(
+    status: JobStatus,
+    request: Request,
+    skip: int = 0,
+    limit: int = 100,
+    db: Session = Depends(get_db),
+):
+    bots_data = read_token(request.headers.get("Authorization"))
+    workspace_prefix = bots_data["guild_name"] + "/"
+    jobs = get_jobs_by_status_and_workspace_prefix(
+        db=db, workspace_prefix=workspace_prefix, status=status, skip=skip, limit=limit
+    )
+    return jobs
