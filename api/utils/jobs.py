@@ -35,11 +35,11 @@ def get_todo_jobs(db: Session, skip: int = 0, limit: int = 100):
     return q.offset(skip).limit(limit).all()
 
 
-def get_jobs_by_status_and_workspace(
-    db: Session, workspace: str, status: str, skip: int = 0, limit: int = 100
+def get_jobs_by_status_and_workspace_prefix(
+    db: Session, workspace_prefix: str, status: str, skip: int = 0, limit: int = 100
 ):
     q = db.query(JobModel).filter(
-        JobModel.workspace == workspace, JobModel.status == status
+        JobModel.workspace.contains(workspace_prefix), JobModel.status == status
     )
     return q.offset(skip).limit(limit).all()
 
