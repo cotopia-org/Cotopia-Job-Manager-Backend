@@ -35,6 +35,15 @@ def get_todo_jobs(db: Session, skip: int = 0, limit: int = 100):
     return q.offset(skip).limit(limit).all()
 
 
+def get_jobs_by_status_and_workspace(
+    db: Session, workspace: str, status: str, skip: int = 0, limit: int = 100
+):
+    q = db.query(JobModel).filter(
+        JobModel.workspace == workspace, JobModel.status == status
+    )
+    return q.offset(skip).limit(limit).all()
+
+
 def edit_job(db: Session, job_id: int, job: JobUpdate):
     db_job = db.query(JobModel).get(job_id)
     db_job.updated_at = datetime.datetime.now(datetime.timezone.utc)
