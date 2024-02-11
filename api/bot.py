@@ -8,6 +8,7 @@ from api.utils.bot import get_user_id
 from api.utils.jobs import (
     accept_job,
     create_job,
+    decline_job,
     edit_accepted_job,
     get_accepted_jobs,
     get_accepted_jobs_by_status,
@@ -150,3 +151,14 @@ async def get_jobs_by_status(
         db=db, workspace_prefix=workspace_prefix, status=status, skip=skip, limit=limit
     )
     return jobs
+
+
+@router.delete("/bot/jobs/decline/{job_id}", status_code=204)
+async def decline(
+    job_id: int,
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    bots_data = read_token(request.headers.get("Authorization"))
+    user_id = get_user_id(db=db, bots_data=bots_data)
+    decline_job(db=db, job_id=job_id, user_id=user_id)
