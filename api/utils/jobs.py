@@ -58,13 +58,13 @@ def edit_job(db: Session, job_id: int, job: JobUpdate):
 
 
 def delete_job(db: Session, job_id: int):
-    db_comment = db.query(JobModel).get(job_id)
-    db_comment.updated_at = datetime.datetime.now(datetime.timezone.utc)
-    db_comment.is_archived = True
+    db_job = db.query(JobModel).get(job_id)
+    db_job.updated_at = datetime.datetime.now(datetime.timezone.utc)
+    db_job.is_archived = True
 
-    db.add(db_comment)
+    db.add(db_job)
     db.commit()
-    return db_comment
+    return db_job
 
 
 def accept_job(db: Session, job_id: int, user_id: int):
