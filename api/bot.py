@@ -146,10 +146,28 @@ async def get_jobs_by_status(
     db: Session = Depends(get_db),
 ):
     bots_data = read_token(request.headers.get("Authorization"))
-    workspace_prefix = bots_data["guild_name"] + "/"
-    jobs = get_jobs_by_status_and_workspace_prefix(
+
+    workspace_prefix = str(bots_data["discord_guild"]) + "/"
+    jobs_2 = get_jobs_by_status_and_workspace_prefix(
         db=db, workspace_prefix=workspace_prefix, status=status, skip=skip, limit=limit
     )
+
+    workspace_prefix = bots_data["guild_name"] + "/"
+    jobs_1 = get_jobs_by_status_and_workspace_prefix(
+        db=db, workspace_prefix=workspace_prefix, status=status, skip=skip, limit=limit
+    )
+
+    if jobs_1 is not None:
+        if jobs_2 is not None:
+            jobs = jobs_1 + jobs_2
+        else:
+            jobs = jobs_1
+    else:
+        if jobs_2 is not None:
+            jobs = jobs_2
+        else:
+            jobs = None
+
     return jobs
 
 
