@@ -13,6 +13,7 @@ from api.utils.jobs import (
     get_accepted_jobs,
     get_all_jobs,
     get_an_accepted_job,
+    get_accepted_jobs_by_status,
     get_job_by_id,
 )
 from auth import get_current_active_user
@@ -20,6 +21,8 @@ from db.db_setup import get_db
 from schemas.job import Job, JobCreate, JobUpdate
 from schemas.user import User
 from schemas.userjob import AcceptedJob, AcceptedJobUpdate
+from db.models.job import JobStatus
+
 
 router = fastapi.APIRouter()
 
@@ -156,4 +159,19 @@ async def get_accepts(
     db: Session = Depends(get_db),
 ):
     accepts = get_accepted_jobs(db=db, user_id=user_id, skip=skip, limit=limit)
+    return accepts
+
+
+@router.get("/aj/{user_id}/by/{status}", response_model=List[AcceptedJob])
+async def get_accepts_by_status(
+    user_id: int,
+    status: JobStatus,
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    skip: int = 0,
+    limit: int = 100,
+    db: Session = Depends(get_db),
+):
+    accepts = get_accepted_jobs_by_status(
+        db=db, user_id=user_id, status=status, skip=skip, limit=limit
+    )
     return accepts
