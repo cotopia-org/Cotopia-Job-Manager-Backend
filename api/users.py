@@ -69,7 +69,7 @@ async def login_for_access_token(
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@router.post("/timebotlogin", response_model=Token)
+@router.post("/timebotlogin")
 async def login_using_time_bot(
     timebotsecret: str,
     username: str,
