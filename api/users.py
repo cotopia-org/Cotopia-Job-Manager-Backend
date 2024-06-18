@@ -6,6 +6,10 @@ from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
+from dotenv import load_dotenv
+from os import getenv
+
+
 from api.utils.users import (
     create_user,
     edit_user,
@@ -20,7 +24,7 @@ from auth import (
     create_access_token,
     get_current_active_user,
 )
-from common.http_exceptions import MISSMATCHAUTH
+from common.http_exceptions import MISSMATCHAUTH, UNAUTHORIZED
 from db.db_setup import get_db
 from schemas.user import User, UserCreate, UserUpdate
 
@@ -63,6 +67,27 @@ async def login_for_access_token(
         data={"sub": user.email}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
+
+
+@router.post("/timebotlogin", response_model=Token)
+async def login_using_time_bot(
+    timebotsecret: str,
+    username: str,
+    password: str,
+    db: Session = Depends(get_db),
+):
+    load_dotenv()
+    if timebotsecret == getenv("TIME_BOT_SECRET"):
+        user = authenticate_user(db, username, password)
+        if not user:
+            raise MISSMATCHAUTH
+        access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        access_token = create_access_token(
+            data={"sub": user.email}, expires_delta=access_token_expires
+        )
+        return access_token
+    else:
+        raise UNAUTHORIZED
 
 
 @router.get("/users/me", response_model=User)
