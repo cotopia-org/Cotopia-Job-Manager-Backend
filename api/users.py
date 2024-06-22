@@ -90,7 +90,7 @@ async def login_using_time_bot(
         raise UNAUTHORIZED
 
 
-@router.get("/users/self", response_model=User)
+@router.get("/self", response_model=User)
 async def read_user_me(
     current_user: Annotated[User, Depends(get_current_active_user)],
 ):
