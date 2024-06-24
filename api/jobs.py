@@ -90,7 +90,7 @@ async def remove_job(
     else:
         if db_job.creator_id == current_user.id:
             job = JobUpdate(is_archived=True)
-            edit_job(db=db, comment_id=job_id, job=job)
+            edit_job(db=db, job_id=job_id, job=job)
         else:
             raise HTTPException(
                 status_code=403, detail="You are not the creator of this job!"
